@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "spawnglider",
+  "version": "${version}",
+  "name": "Spawn Glider",
+  "description": "",
+  "authors": ["kokoio01"],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "fabric-datagen": [
+      "de.kokoio01.spawnglider.client.SpawnelytraDataGenerator"
+    ],
+    "main": [
+      "de.kokoio01.spawnglider.SpawnGlider"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
