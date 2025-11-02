@@ -45,6 +45,24 @@ public class SpawnElytraConfig {
 	@SerializedName("regions")
 	public List<Region> regions = new ArrayList<>();
 
+	@SerializedName("maxBoosts")
+	public int maxBoosts = 10;
+
+	@SerializedName("boostStrength")
+	public double boostStrength = 1.5;
+
+	@SerializedName("boostCooldownTicks")
+	public int boostCooldownTicks = 10;
+
+	@SerializedName("boostActivationMessage")
+	public String boostActivationMessage = "Right-click to boost yourself";
+
+	@SerializedName("boostSuccessMessage")
+	public String boostSuccessMessage = "BOOST!";
+
+	@SerializedName("noBoostsMessage")
+	public String noBoostsMessage = "No boosts remaining!";
+
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 	private static final String FILE_NAME = "spawnelytra.json";
 

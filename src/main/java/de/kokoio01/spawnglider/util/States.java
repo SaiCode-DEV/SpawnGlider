@@ -11,6 +11,8 @@ public class States {
 	public static Set<UUID> FlyingPlayers = new HashSet<>();
 	public static Map<UUID, Long> GracePeriodEndTimes = new HashMap<>();
 	public static Map<UUID, Integer> FlyingTicks = new HashMap<>();
+	public static Map<UUID, Integer> BoostCount = new HashMap<>();
+	public static Map<UUID, Long> LastBoostTime = new HashMap<>();
 
 	public static boolean isGlidingEnabled(UUID uuid) {
 		return GlidingEnabled.getOrDefault(uuid, true);
@@ -60,5 +62,32 @@ public class States {
 
 	public static void clearGracePeriod(UUID uuid) {
 		GracePeriodEndTimes.remove(uuid);
+	}
+
+	public static int getBoostCount(UUID uuid) {
+		return BoostCount.getOrDefault(uuid, 0);
+	}
+
+	public static void setBoostCount(UUID uuid, int count) {
+		BoostCount.put(uuid, count);
+	}
+
+	public static void decrementBoost(UUID uuid) {
+		int current = getBoostCount(uuid);
+		if (current > 0) {
+			setBoostCount(uuid, current - 1);
+		}
+	}
+
+	public static void resetBoosts(UUID uuid, int maxBoosts) {
+		setBoostCount(uuid, maxBoosts);
+	}
+
+	public static long getLastBoostTime(UUID uuid) {
+		return LastBoostTime.getOrDefault(uuid, 0L);
+	}
+
+	public static void setLastBoostTime(UUID uuid, long time) {
+		LastBoostTime.put(uuid, time);
 	}
 }
