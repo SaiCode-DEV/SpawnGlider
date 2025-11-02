@@ -9,8 +9,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 public class RegionFlightController {
-	private static final int GRACE_PERIOD_TICKS = 5;
+	private static final int GRACE_PERIOD_TICKS = 30 * 20;
 	private static final int MIN_FLYING_TICKS_FOR_GRACE = 20;
+	private static final int MIN_AIRBORNE_TICKS = 10; // ~0.5 seconds before activating glide
+	private static final double MIN_FALL_DISTANCE = 1.0; // Minimum fall distance in blocks
 
 	private final SpawnElytraConfig config;
 
@@ -38,11 +40,24 @@ public class RegionFlightController {
 				inside = region.contains(worldId, player.getX(), player.getY(), player.getZ());
 			}
 
-			if (inside && !player.isGliding() && !player.isOnGround()) {
-				player.startGliding();
-				States.setFlying(player.getUuid(), true);
+			// Track airborne time for players in region
+			if (inside && !player.isOnGround()) {
+				if (!States.isFlying(player.getUuid())) {
+					States.incrementFlyingTicks(player.getUuid());
+				}
+				
+				// Only activate gliding after minimum airborne time AND fall distance
+				if (!player.isGliding() && 
+					States.getFlyingTicks(player.getUuid()) >= MIN_AIRBORNE_TICKS &&
+					player.fallDistance >= MIN_FALL_DISTANCE) {
+					player.startGliding();
+					States.setFlying(player.getUuid(), true);
+					States.resetFlyingTicks(player.getUuid());
+					continue;
+				}
+			} else if (inside && player.isOnGround() && !States.isFlying(player.getUuid())) {
+				// Reset airborne counter when on ground and not flying
 				States.resetFlyingTicks(player.getUuid());
-				continue;
 			}
 
 			if (States.isFlying(player.getUuid()) && !player.isOnGround()) {
